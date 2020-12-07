@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.apache.activemq.ActiveMQConnectionFactory
 import org.freekode.cryptobot.platformbinance.domain.PlatformName
+import org.freekode.cryptobot.platformbinance.domain.PlatformPriceEvent
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer
@@ -25,12 +28,14 @@ import javax.jms.ConnectionFactory
 @EnableJms
 @PropertySources(
     PropertySource("classpath:application.properties"),
-    PropertySource("file:\${user.home}/platform-binance.properties")
+    PropertySource(value = ["file:\${user.home}/platform-binance.properties"], ignoreResourceNotFound = true)
 )
 class PlatformBinanceApplication(
     @Value("\${broker-url}") private val brokerUrl: String,
     @Value("\${platform.name}") private val platformName: String
 ) {
+
+    private val log: Logger = LoggerFactory.getLogger(PlatformBinanceApplication::class.java)
 
     @Bean
     fun platformName(): PlatformName {
@@ -62,6 +67,8 @@ class PlatformBinanceApplication(
 
     @Bean
     fun connectionFactory(): ConnectionFactory {
+        log.info("ActiveMQ Broker URL $brokerUrl")
+
         val factory = ActiveMQConnectionFactory()
         factory.brokerURL = brokerUrl
         return factory
@@ -74,7 +81,14 @@ class PlatformBinanceApplication(
         converter.setObjectMapper(mapper)
         converter.setTargetType(MessageType.TEXT)
         converter.setTypeIdPropertyName("_type")
+        converter.setTypeIdMappings(getMessageConverterTypeMappings())
         return converter
+    }
+
+    private fun getMessageConverterTypeMappings(): Map<String?, Class<*>> {
+        return mapOf(
+            PlatformPriceEvent::class.simpleName to PlatformPriceEvent::class.java
+        )
     }
 }
 

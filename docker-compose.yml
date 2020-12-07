@@ -6,10 +6,10 @@ services:
     ports:
       - '61616:61616'
       - '8161:8161'
-#  platform-binance:
-#    container_name: 'platform-binance'
-#    build: .
-#    depends_on:
-#      - activemq
-#    ports:
-#      - '8888:8080'
+  platform-binance:
+    container_name: 'platform-binance'
+    image: freekode/platform-binance
+    depends_on:
+      - activemq
+    ports:
+      - '8081:8080'

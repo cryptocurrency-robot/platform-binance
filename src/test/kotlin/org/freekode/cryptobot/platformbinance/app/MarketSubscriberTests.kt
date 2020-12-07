@@ -1,10 +1,8 @@
 package org.freekode.cryptobot.platformbinance.app
 
 import org.freekode.cryptobot.platformbinance.domain.MarketPair
-import org.freekode.cryptobot.platformbinance.domain.MarketQuery
+import org.freekode.cryptobot.platformbinance.domain.PlatformQuery
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -14,24 +12,23 @@ import org.springframework.context.annotation.PropertySources
 
 @SpringBootTest
 @PropertySources(
-    PropertySource("classpath:application.properties"),
-    PropertySource("file:\${user.home}/platform-binance.properties")
+    PropertySource("classpath:application.properties")
 )
 class MarketSubscriberTests {
     @MockBean
-    private var marketQuery: MarketQuery? = null
+    private var platformQuery: PlatformQuery? = null
 
     @Autowired
-    private var marketSubscriber: MarketSubscriber? = null
+    private var platformSubscriber: PlatformSubscriber? = null
 
     @Test
     fun subscribeForPriceTest() {
         getMockMarketQuery()
 
-        marketSubscriber!!.subscribeForPrice(MarketPair.BTC_USDT)
+        platformSubscriber!!.subscribeForPlatformPrice(MarketPair.BTC_USDT)
     }
 
     private fun getMockMarketQuery() {
-        val mock = mock(MarketQuery::class.java)
+        val mock = mock(PlatformQuery::class.java)
     }
 }

@@ -4,9 +4,9 @@ import java.io.Serializable
 import java.math.BigDecimal
 
 
-class PriceValue(
+data class PlatformPriceEvent(
     val platformName: PlatformName,
     val pair: MarketPair,
     val price: BigDecimal,
-    val eventTime: Long
+    val timestamp: Long
 ) : Serializable
