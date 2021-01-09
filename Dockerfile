@@ -5,7 +5,13 @@ ENV BINANCE_API_SECRET=''
 ENV BROKER_URL=''
 ENV JAR_NAME='platform-binance-0.0.1.jar'
 
+RUN mkdir /sources
+COPY . /sources
+WORKDIR /sources
+RUN ./mvnw package -DskipTests
 COPY ./target/$JAR_NAME /usr/app/
+RUN rm -rf /sources
+
 WORKDIR /usr/app
 EXPOSE 8080
 ENTRYPOINT java -jar $JAR_NAME \
