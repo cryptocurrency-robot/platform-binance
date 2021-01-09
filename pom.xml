@@ -9,14 +9,14 @@
 		<version>2.4.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>org.freekode.cryptobot</groupId>
+	<groupId>org.freekode.cryptocurrency-robot</groupId>
 	<artifactId>platform-binance</artifactId>
 	<version>0.0.1</version>
 	<name>Platform - Binance</name>
 
 	<properties>
 		<java.version>11</java.version>
-		<kotlin.version>1.4.20</kotlin.version>
+		<kotlin.version>1.4.21</kotlin.version>
 		<binance-java-api.version>60eebc2e95</binance-java-api.version>
 		<mockito.version>3.6.28</mockito.version>
 		<testng.version>6.11</testng.version>
