@@ -4,13 +4,12 @@ name: CI
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
-  # Allows you to run this workflow manually from the Actions tab
+  pull_request:
+
   workflow_dispatch:
 
 jobs:
@@ -25,7 +24,6 @@ jobs:
         with:
           java-version: 11
 
-      # Runs a single command using the runners shell
       - name: Package
         run: ./mvnw package
         
