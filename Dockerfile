@@ -9,10 +9,11 @@ RUN mkdir /sources
 COPY . /sources
 WORKDIR /sources
 RUN ./mvnw package -DskipTests
-COPY ./target/$JAR_NAME /usr/app/
+RUN mkdir /app
+RUN cp ./target/$JAR_NAME /app
 RUN rm -rf /sources
 
-WORKDIR /usr/app
+WORKDIR /app
 EXPOSE 8080
 ENTRYPOINT java -jar $JAR_NAME \
 	--binance.api.key=$BINANCE_API_KEY \
