@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class JmsPlatformPriceSubmitter(
-    @Value("\${event.platformPriceTopic}") private val platformPriceTopic: String,
+    @Value("\${event.topic.platformPrice}") private val platformPriceTopic: String,
     private val jmsTemplate: JmsTemplate,
 ) : PlatformPriceSubmitter {
     override fun submitPrice(platformPriceEvent: PlatformPriceEvent) {

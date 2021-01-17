@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer
 import org.springframework.boot.runApplication
+import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.PropertySource
 import org.springframework.context.annotation.PropertySources
@@ -26,12 +27,13 @@ import javax.jms.ConnectionFactory
 
 @SpringBootApplication
 @EnableJms
+@EnableCaching
 @PropertySources(
     PropertySource("classpath:application.properties"),
     PropertySource(value = ["file:\${user.home}/platform-binance.properties"], ignoreResourceNotFound = true)
 )
 class PlatformBinanceApplication(
-    @Value("\${broker-url}") private val brokerUrl: String,
+    @Value("\${event.broker-url}") private val brokerUrl: String,
     @Value("\${platform.name}") private val platformName: String
 ) {
 

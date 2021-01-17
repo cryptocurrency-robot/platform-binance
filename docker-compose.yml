@@ -1,7 +1,7 @@
 version: '3'
 services:
   activemq:
-    container_name: 'crypto-bot-activemq'
+    container_name: 'activemq'
     image: freekode/activemq
     ports:
       - '61616:61616'
@@ -14,7 +14,7 @@ services:
     ports:
       - '8081:8080'
     environment:
-      - BROKER_URL=tcp://crypto-bot-activemq:61616
+      - EVENT_BROKER_URL=tcp://activemq:61616
       - BINANCE_API_KEY=test-key
       - BINANCE_API_SECRET=test-secret
 
