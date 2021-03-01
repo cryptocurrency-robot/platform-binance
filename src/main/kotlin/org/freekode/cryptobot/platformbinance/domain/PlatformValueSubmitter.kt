@@ -1,6 +1,6 @@
 package org.freekode.cryptobot.platformbinance.domain
 
 
-interface PlatformPriceSubmitter {
+interface PlatformValueSubmitter {
     fun submitPrice(platformValueEvent: PlatformValueEvent)
 }

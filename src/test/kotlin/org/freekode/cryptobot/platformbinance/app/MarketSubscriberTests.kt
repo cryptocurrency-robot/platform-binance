@@ -1,6 +1,6 @@
 package org.freekode.cryptobot.platformbinance.app
 
-import org.freekode.cryptobot.platformbinance.domain.MarketPair
+import org.freekode.cryptobot.platformbinance.domain.PlatformIndicator
 import org.freekode.cryptobot.platformbinance.domain.PlatformQuery
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
@@ -25,7 +25,7 @@ class MarketSubscriberTests {
     fun subscribeForPriceTest() {
         getMockMarketQuery()
 
-        priceSubscriberService!!.subscribeForPrice(MarketPair.BTC_USDT)
+        priceSubscriberService!!.subscribeForIndicator(PlatformIndicator.BTC_USDT)
     }
 
     private fun getMockMarketQuery() {

@@ -6,7 +6,7 @@ import java.math.BigDecimal
 
 data class PlatformValueEvent(
     val platformName: PlatformName,
-    val pair: MarketPair,
+    val indicatorName: IndicatorName,
     val value: BigDecimal,
     val timestamp: Long
 ) : Serializable

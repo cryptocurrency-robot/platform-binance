@@ -7,10 +7,10 @@ import java.io.Closeable
 interface PlatformQuery {
     fun getServerTime(): Long
 
-    fun findPriceStream(marketPair: MarketPair): Closeable?
+    fun findPriceStream(platformIndicator: PlatformIndicator): Closeable?
 
-    fun openPriceStream(marketPair: MarketPair, callback: (PlatformValueEvent) -> Unit): Closeable
+    fun openPriceStream(platformIndicator: PlatformIndicator, callback: (PlatformValueEvent) -> Unit): Closeable
 
-    fun getDayPriceStatistic(marketPair: MarketPair): TickerStatistics
+    fun getDayPriceStatistic(platformIndicator: PlatformIndicator): TickerStatistics
 }
 

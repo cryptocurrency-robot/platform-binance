@@ -5,7 +5,8 @@ import com.binance.api.client.BinanceApiClientFactory
 import com.binance.api.client.BinanceApiRestClient
 import com.binance.api.client.BinanceApiWebSocketClient
 import com.binance.api.client.domain.event.AggTradeEvent
-import org.freekode.cryptobot.platformbinance.domain.MarketPair
+import org.freekode.cryptobot.platformbinance.domain.IndicatorName
+import org.freekode.cryptobot.platformbinance.domain.PlatformIndicator
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
@@ -39,7 +40,7 @@ class BinanceMarketClientTests {
     @Test
     fun get25hPriceStatisticsTest() {
         // when
-        val tickerStatistics = binanceRestClient!!.get24HrPriceStatistics(MarketPair.BTC_USDT.title.toUpperCase())
+        val tickerStatistics = binanceRestClient!!.get24HrPriceStatistics(PlatformIndicator.BTC_USDT.platformSpecificName.toUpperCase())
 
         // then
         Assert.assertNotNull(tickerStatistics)
@@ -61,7 +62,7 @@ class BinanceMarketClientTests {
         }
 
         // when
-        binanceWebSocketClient!!.onAggTradeEvent(MarketPair.BTC_USDT.title.toLowerCase(), binanceApiCallback)
+        binanceWebSocketClient!!.onAggTradeEvent(PlatformIndicator.BTC_USDT.platformSpecificName.toLowerCase(), binanceApiCallback)
         Thread.sleep(5000)
 
         // then

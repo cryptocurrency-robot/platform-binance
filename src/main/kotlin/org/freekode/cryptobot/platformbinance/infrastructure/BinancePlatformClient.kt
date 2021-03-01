@@ -6,10 +6,7 @@ import com.binance.api.client.BinanceApiRestClient
 import com.binance.api.client.BinanceApiWebSocketClient
 import com.binance.api.client.domain.event.AggTradeEvent
 import com.binance.api.client.domain.market.TickerStatistics
-import org.freekode.cryptobot.platformbinance.domain.MarketPair
-import org.freekode.cryptobot.platformbinance.domain.PlatformName
-import org.freekode.cryptobot.platformbinance.domain.PlatformValueEvent
-import org.freekode.cryptobot.platformbinance.domain.PlatformQuery
+import org.freekode.cryptobot.platformbinance.domain.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -47,34 +44,34 @@ class BinancePlatformClient(
         return binanceRestClient.serverTime
     }
 
-    override fun findPriceStream(marketPair: MarketPair): Closeable? {
-        return cache.get(marketPair)?.get() as Closeable
+    override fun findPriceStream(platformIndicator: PlatformIndicator): Closeable? {
+        return cache.get(platformIndicator)?.get() as Closeable
     }
 
-    override fun openPriceStream(marketPair: MarketPair, callback: (PlatformValueEvent) -> Unit): Closeable {
-        val closeable = cache.get(marketPair)
+    override fun openPriceStream(platformIndicator: PlatformIndicator, callback: (PlatformValueEvent) -> Unit): Closeable {
+        val closeable = cache.get(platformIndicator)
         if (closeable != null) {
             throw IllegalStateException("Such stream is already opened")
         }
 
-        val binanceCallback: BinanceApiCallback<AggTradeEvent> = getBinanceCallback(marketPair, callback)
-        val newCloseable = binanceWebSocketClient.onAggTradeEvent(marketPair.title.toLowerCase(), binanceCallback)
-        cache.put(marketPair, newCloseable)
+        val binanceCallback: BinanceApiCallback<AggTradeEvent> = getBinanceCallback(platformIndicator, callback)
+        val newCloseable = binanceWebSocketClient.onAggTradeEvent(platformIndicator.platformSpecificName.toLowerCase(), binanceCallback)
+        cache.put(platformIndicator, newCloseable)
 
         return newCloseable
     }
 
-    override fun getDayPriceStatistic(marketPair: MarketPair): TickerStatistics {
-        return binanceRestClient.get24HrPriceStatistics(marketPair.title.toUpperCase())
+    override fun getDayPriceStatistic(platformIndicator: PlatformIndicator): TickerStatistics {
+        return binanceRestClient.get24HrPriceStatistics(platformIndicator.platformSpecificName.toUpperCase())
     }
 
-    private fun getBinanceCallback(marketPair: MarketPair, callback: (PlatformValueEvent) -> Unit) = object : BinanceApiCallback<AggTradeEvent> {
+    private fun getBinanceCallback(platformIndicator: PlatformIndicator, callback: (PlatformValueEvent) -> Unit) = object : BinanceApiCallback<AggTradeEvent> {
         override fun onFailure(cause: Throwable) {
             log.error("Aggregated trade event error", cause)
         }
 
         override fun onResponse(event: AggTradeEvent) {
-            val priceValue = PlatformValueEvent(platformName, marketPair, BigDecimal(event.price), event.eventTime)
+            val priceValue = PlatformValueEvent(platformName, platformIndicator.indicatorName, BigDecimal(event.price), event.eventTime)
             callback.invoke(priceValue)
         }
     }

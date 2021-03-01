@@ -1,7 +1,7 @@
 package org.freekode.cryptobot.platformbinance.app
 
-import org.freekode.cryptobot.platformbinance.domain.MarketPair
-import org.freekode.cryptobot.platformbinance.domain.PlatformPriceSubmitter
+import org.freekode.cryptobot.platformbinance.domain.PlatformIndicator
+import org.freekode.cryptobot.platformbinance.domain.PlatformValueSubmitter
 import org.freekode.cryptobot.platformbinance.domain.PlatformQuery
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -12,20 +12,20 @@ import java.io.Closeable
 @Service
 class PriceSubscriberService(
     private val platformQuery: PlatformQuery,
-    private val platformPriceSubmitter: PlatformPriceSubmitter
+    private val platformValueSubmitter: PlatformValueSubmitter
 ) {
     private val logger: Logger = LoggerFactory.getLogger(PriceSubscriberService::class.java)
 
-    fun subscribeForPrice(pair: MarketPair): Closeable {
-        logger.info("Subscribing for $pair")
-        return platformQuery.openPriceStream(pair) {
-            platformPriceSubmitter.submitPrice(it)
+    fun subscribeForIndicator(platformIndicator: PlatformIndicator): Closeable {
+        logger.info("Subscribing for $platformIndicator")
+        return platformQuery.openPriceStream(platformIndicator) {
+            platformValueSubmitter.submitPrice(it)
         }
     }
 
-    fun unsubscribeForPrice(pair: MarketPair) {
-        logger.info("Unsubscribing for $pair")
-        val priceStream = platformQuery.findPriceStream(pair)
+    fun unsubscribeForIndicator(platformIndicator: PlatformIndicator) {
+        logger.info("Unsubscribing for $platformIndicator")
+        val priceStream = platformQuery.findPriceStream(platformIndicator)
         priceStream?.close()
     }
 }
