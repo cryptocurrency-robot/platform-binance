@@ -9,6 +9,6 @@ import java.util.Arrays.asList
 @Component
 class SimpleCacheCustomizer : CacheManagerCustomizer<ConcurrentMapCacheManager> {
     override fun customize(cacheManager: ConcurrentMapCacheManager) {
-        cacheManager.setCacheNames(listOf("priceStream"))
+        cacheManager.setCacheNames(listOf("priceStreams"))
     }
 }

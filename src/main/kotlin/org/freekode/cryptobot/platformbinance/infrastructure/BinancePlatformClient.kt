@@ -8,7 +8,7 @@ import com.binance.api.client.domain.event.AggTradeEvent
 import com.binance.api.client.domain.market.TickerStatistics
 import org.freekode.cryptobot.platformbinance.domain.MarketPair
 import org.freekode.cryptobot.platformbinance.domain.PlatformName
-import org.freekode.cryptobot.platformbinance.domain.PlatformPriceEvent
+import org.freekode.cryptobot.platformbinance.domain.PlatformValueEvent
 import org.freekode.cryptobot.platformbinance.domain.PlatformQuery
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -40,7 +40,7 @@ class BinancePlatformClient(
         binanceRestClient = factory.newRestClient()
         binanceWebSocketClient = factory.newWebSocketClient()
 
-        cache = cacheManager.getCache("priceStream")!!
+        cache = cacheManager.getCache("priceStreams")!!
     }
 
     override fun getServerTime(): Long {
@@ -51,7 +51,7 @@ class BinancePlatformClient(
         return cache.get(marketPair)?.get() as Closeable
     }
 
-    override fun openPriceStream(marketPair: MarketPair, callback: (PlatformPriceEvent) -> Unit): Closeable {
+    override fun openPriceStream(marketPair: MarketPair, callback: (PlatformValueEvent) -> Unit): Closeable {
         val closeable = cache.get(marketPair)
         if (closeable != null) {
             throw IllegalStateException("Such stream is already opened")
@@ -68,13 +68,13 @@ class BinancePlatformClient(
         return binanceRestClient.get24HrPriceStatistics(marketPair.title.toUpperCase())
     }
 
-    private fun getBinanceCallback(marketPair: MarketPair, callback: (PlatformPriceEvent) -> Unit) = object : BinanceApiCallback<AggTradeEvent> {
+    private fun getBinanceCallback(marketPair: MarketPair, callback: (PlatformValueEvent) -> Unit) = object : BinanceApiCallback<AggTradeEvent> {
         override fun onFailure(cause: Throwable) {
             log.error("Aggregated trade event error", cause)
         }
 
         override fun onResponse(event: AggTradeEvent) {
-            val priceValue = PlatformPriceEvent(platformName, marketPair, BigDecimal(event.price), event.eventTime)
+            val priceValue = PlatformValueEvent(platformName, marketPair, BigDecimal(event.price), event.eventTime)
             callback.invoke(priceValue)
         }
     }

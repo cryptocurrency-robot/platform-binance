@@ -10,11 +10,11 @@ import java.io.Closeable
 
 
 @Service
-class PriceStreamService(
+class PriceSubscriberService(
     private val platformQuery: PlatformQuery,
     private val platformPriceSubmitter: PlatformPriceSubmitter
 ) {
-    private val logger: Logger = LoggerFactory.getLogger(PriceStreamService::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(PriceSubscriberService::class.java)
 
     fun subscribeForPrice(pair: MarketPair): Closeable {
         logger.info("Subscribing for $pair")

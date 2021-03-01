@@ -19,13 +19,13 @@ class MarketSubscriberTests {
     private var platformQuery: PlatformQuery? = null
 
     @Autowired
-    private var priceStreamService: PriceStreamService? = null
+    private var priceSubscriberService: PriceSubscriberService? = null
 
     @Test
     fun subscribeForPriceTest() {
         getMockMarketQuery()
 
-        priceStreamService!!.subscribeForPrice(MarketPair.BTC_USDT)
+        priceSubscriberService!!.subscribeForPrice(MarketPair.BTC_USDT)
     }
 
     private fun getMockMarketQuery() {

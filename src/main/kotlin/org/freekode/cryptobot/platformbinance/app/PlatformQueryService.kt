@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 
 
 @Service
-class PlatformService(
+class PlatformQueryService(
     private val platformQuery: PlatformQuery
 ) {
     fun getServerTime(): Long {

@@ -62,7 +62,7 @@ class BinanceMarketClientTests {
 
         // when
         binanceWebSocketClient!!.onAggTradeEvent(MarketPair.BTC_USDT.title.toLowerCase(), binanceApiCallback)
-        Thread.sleep(2000)
+        Thread.sleep(5000)
 
         // then
         Assert.assertFalse(list.isEmpty())

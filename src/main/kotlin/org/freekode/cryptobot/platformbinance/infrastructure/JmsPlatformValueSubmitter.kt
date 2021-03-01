@@ -1,17 +1,17 @@
 package org.freekode.cryptobot.platformbinance.infrastructure
 
 import org.freekode.cryptobot.platformbinance.domain.PlatformPriceSubmitter
-import org.freekode.cryptobot.platformbinance.domain.PlatformPriceEvent
+import org.freekode.cryptobot.platformbinance.domain.PlatformValueEvent
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.jms.core.JmsTemplate
 import org.springframework.stereotype.Component
 
 @Component
-class JmsPlatformPriceSubmitter(
-    @Value("\${event.topic.platformPrice}") private val platformPriceTopic: String,
+class JmsPlatformValueSubmitter(
+    @Value("\${event.topic.platformValue}") private val platformValueTopic: String,
     private val jmsTemplate: JmsTemplate,
 ) : PlatformPriceSubmitter {
-    override fun submitPrice(platformPriceEvent: PlatformPriceEvent) {
-        jmsTemplate.convertAndSend(platformPriceTopic, platformPriceEvent)
+    override fun submitPrice(platformValueEvent: PlatformValueEvent) {
+        jmsTemplate.convertAndSend(platformValueTopic, platformValueEvent)
     }
 }

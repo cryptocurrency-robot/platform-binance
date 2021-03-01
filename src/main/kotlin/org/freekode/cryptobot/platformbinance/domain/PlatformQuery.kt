@@ -9,7 +9,7 @@ interface PlatformQuery {
 
     fun findPriceStream(marketPair: MarketPair): Closeable?
 
-    fun openPriceStream(marketPair: MarketPair, callback: (PlatformPriceEvent) -> Unit): Closeable
+    fun openPriceStream(marketPair: MarketPair, callback: (PlatformValueEvent) -> Unit): Closeable
 
     fun getDayPriceStatistic(marketPair: MarketPair): TickerStatistics
 }

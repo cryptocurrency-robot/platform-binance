@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.apache.activemq.ActiveMQConnectionFactory
 import org.freekode.cryptobot.platformbinance.domain.PlatformName
-import org.freekode.cryptobot.platformbinance.domain.PlatformPriceEvent
+import org.freekode.cryptobot.platformbinance.domain.PlatformValueEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -89,7 +89,7 @@ class PlatformBinanceApplication(
 
     private fun getMessageConverterTypeMappings(): Map<String?, Class<*>> {
         return mapOf(
-            PlatformPriceEvent::class.simpleName to PlatformPriceEvent::class.java
+            PlatformValueEvent::class.simpleName to PlatformValueEvent::class.java
         )
     }
 }
