@@ -1,17 +1,17 @@
 package org.freekode.cryptobot.platformbinance.rest
 
-import org.freekode.cryptobot.platformbinance.app.PlatformService
+import org.freekode.cryptobot.platformbinance.domain.ServerTimeQuery
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("platform/query")
-class PlatformController(
-    private val platformService: PlatformService
+@RequestMapping("platform/serverTime")
+class ServerTimeController(
+    private val serverTimeQuery: ServerTimeQuery
 ) {
-    @GetMapping("serverTime")
+    @GetMapping
     fun getServerTime(): Long {
-        return platformService.getServerTime()
+        return serverTimeQuery.getServerTime()
     }
 }

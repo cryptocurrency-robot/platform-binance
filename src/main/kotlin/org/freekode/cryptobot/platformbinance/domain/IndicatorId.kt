@@ -1,4 +1,4 @@
 package org.freekode.cryptobot.platformbinance.domain
 
 
-data class PlatformName(val value: String)
+data class IndicatorId(val value: String)
