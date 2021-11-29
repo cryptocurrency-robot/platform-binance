@@ -1,10 +1,11 @@
 package org.freekode.cryptobot.platformbinance.infrastructure.indicators
 
 import com.binance.api.client.BinanceApiRestClient
-import org.freekode.cryptobot.platformbinance.domain.IndicatorId
+import org.freekode.cryptobot.genericplatformlibrary.domain.GenericMarketPair
+import org.freekode.cryptobot.genericplatformlibrary.domain.IndicatorId
+import org.freekode.cryptobot.genericplatformlibrary.domain.PlatformIndicator
+import org.freekode.cryptobot.genericplatformlibrary.domain.PlatformResponse
 import org.freekode.cryptobot.platformbinance.domain.MarketPair
-import org.freekode.cryptobot.platformbinance.domain.PlatformIndicator
-import org.freekode.cryptobot.platformbinance.domain.PlatformResponse
 import org.freekode.cryptobot.platformbinance.domain.ServerTimeQuery
 import org.freekode.cryptobot.platformbinance.infrastructure.schedule.JobScheduler
 import org.quartz.TriggerKey
@@ -33,19 +34,21 @@ class BinanceDayChangeIndicator(
 
     override fun getIndicatorId(): IndicatorId = INDICATOR_ID_24_PRICE_CHANGE
 
-    override fun openStream(pair: MarketPair, callback: (PlatformResponse) -> Unit) {
-        validateStream(pair)
+    override fun openStream(pair: GenericMarketPair, callback: (PlatformResponse) -> Unit) {
+        val marketPair = MarketPair.valueOf(pair.getName())
+        validateStream(marketPair)
 
         val triggerKey = TriggerKey(INDICATOR_ID_24_PRICE_CHANGE.value + "-trigger")
-        val platformCallback = getCallback(pair, callback)
-        jobScheduler.scheduleSimpleCallbackJob(triggerKey, 10, platformCallback)
+        val platformCallback = getCallback(marketPair, callback)
+        jobScheduler.scheduleJob(triggerKey, 10, platformCallback)
 
-        cache.put(pair, triggerKey)
+        cache.put(marketPair, triggerKey)
     }
 
-    override fun closeStream(pair: MarketPair) {
-        val triggerKey = cache.get(pair)?.get() as TriggerKey
-        jobScheduler.unscheduleSimpleCallbackJob(triggerKey)
+    override fun closeStream(pair: GenericMarketPair) {
+        val marketPair = MarketPair.valueOf(pair.getName())
+        val triggerKey = cache.get(marketPair)?.get() as TriggerKey
+        jobScheduler.unscheduleJob(triggerKey)
     }
 
     override fun getServerTime(): Long {
@@ -54,7 +57,7 @@ class BinanceDayChangeIndicator(
 
     private fun getCallback(marketPair: MarketPair, callback: (PlatformResponse) -> Unit): () -> Unit {
         return {
-            val tickerStatistics = binanceRestClient.get24HrPriceStatistics(marketPair.title.uppercase())
+            val tickerStatistics = binanceRestClient.get24HrPriceStatistics(marketPair.getTitle().uppercase())
             val priceChangePercent = tickerStatistics.priceChangePercent
             val platformResponse =
                 PlatformResponse(marketPair, INDICATOR_ID_24_PRICE_CHANGE, BigDecimal(priceChangePercent), Date().time)

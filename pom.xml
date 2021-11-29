@@ -19,6 +19,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.freekode.cryptocurrency-robot</groupId>
+			<artifactId>generic-platform-library</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.github.binance-exchange</groupId>
 			<artifactId>binance-java-api</artifactId>
 			<version>${binance-java-api.version}</version>

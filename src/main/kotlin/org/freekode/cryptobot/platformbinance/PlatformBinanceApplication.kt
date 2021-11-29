@@ -1,6 +1,6 @@
 package org.freekode.cryptobot.platformbinance
 
-import org.freekode.cryptobot.platformbinance.domain.PlatformId
+import org.freekode.cryptobot.genericplatformlibrary.domain.PlatformId
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

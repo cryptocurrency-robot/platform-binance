@@ -1,7 +1,7 @@
 package org.freekode.cryptobot.platformbinance.rest
 
+import org.freekode.cryptobot.genericplatformlibrary.domain.IndicatorId
 import org.freekode.cryptobot.platformbinance.app.IndicatorStreamService
-import org.freekode.cryptobot.platformbinance.domain.IndicatorId
 import org.freekode.cryptobot.platformbinance.domain.MarketPair
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

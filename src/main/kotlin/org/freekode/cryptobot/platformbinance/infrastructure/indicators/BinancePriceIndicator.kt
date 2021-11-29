@@ -3,10 +3,11 @@ package org.freekode.cryptobot.platformbinance.infrastructure.indicators
 import com.binance.api.client.BinanceApiCallback
 import com.binance.api.client.BinanceApiWebSocketClient
 import com.binance.api.client.domain.event.AggTradeEvent
-import org.freekode.cryptobot.platformbinance.domain.IndicatorId
+import org.freekode.cryptobot.genericplatformlibrary.domain.GenericMarketPair
+import org.freekode.cryptobot.genericplatformlibrary.domain.IndicatorId
+import org.freekode.cryptobot.genericplatformlibrary.domain.PlatformIndicator
+import org.freekode.cryptobot.genericplatformlibrary.domain.PlatformResponse
 import org.freekode.cryptobot.platformbinance.domain.MarketPair
-import org.freekode.cryptobot.platformbinance.domain.PlatformIndicator
-import org.freekode.cryptobot.platformbinance.domain.PlatformResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.cache.Cache
@@ -35,16 +36,18 @@ class BinancePriceIndicator(
 
     override fun getIndicatorId(): IndicatorId = PRICE_INDICATOR_ID
 
-    override fun openStream(pair: MarketPair, callback: (PlatformResponse) -> Unit) {
-        validateStream(pair)
+    override fun openStream(pair: GenericMarketPair, callback: (PlatformResponse) -> Unit) {
+        val marketPair = MarketPair.valueOf(pair.getName())
+        validateStream(marketPair)
 
-        val binanceCallback: BinanceApiCallback<AggTradeEvent> = getBinanceCallback(pair, callback)
-        val newStream = binanceWebSocketClient.onAggTradeEvent(pair.title.lowercase(), binanceCallback)
+        val binanceCallback: BinanceApiCallback<AggTradeEvent> = getBinanceCallback(marketPair, callback)
+        val newStream = binanceWebSocketClient.onAggTradeEvent(marketPair.getTitle().lowercase(), binanceCallback)
         cache.put(pair, newStream)
     }
 
-    override fun closeStream(pair: MarketPair) {
-        return (cache.get(pair)?.get() as Closeable).close()
+    override fun closeStream(pair: GenericMarketPair) {
+        val marketPair = MarketPair.valueOf(pair.getName())
+        return (cache.get(marketPair)?.get() as Closeable).close()
     }
 
     private fun validateStream(marketPair: MarketPair) {
