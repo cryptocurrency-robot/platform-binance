@@ -5,9 +5,9 @@ import org.freekode.cryptobot.genericplatformlibrary.domain.GenericMarketPair
 import org.freekode.cryptobot.genericplatformlibrary.domain.IndicatorId
 import org.freekode.cryptobot.genericplatformlibrary.domain.PlatformIndicator
 import org.freekode.cryptobot.genericplatformlibrary.domain.PlatformResponse
+import org.freekode.cryptobot.genericplatformlibrary.infrastructure.schedule.SimpleJobScheduler
 import org.freekode.cryptobot.platformbinance.domain.MarketPair
 import org.freekode.cryptobot.platformbinance.domain.ServerTimeQuery
-import org.freekode.cryptobot.platformbinance.infrastructure.schedule.JobScheduler
 import org.quartz.TriggerKey
 import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
@@ -18,7 +18,7 @@ import java.util.*
 @Component
 class BinanceDayChangeIndicator(
     private val binanceRestClient: BinanceApiRestClient,
-    private val jobScheduler: JobScheduler,
+    private val simpleJobScheduler: SimpleJobScheduler,
     cacheManager: CacheManager
 ) : PlatformIndicator, ServerTimeQuery {
 
@@ -40,7 +40,7 @@ class BinanceDayChangeIndicator(
 
         val triggerKey = TriggerKey(INDICATOR_ID_24_PRICE_CHANGE.value + "-trigger")
         val platformCallback = getCallback(marketPair, callback)
-        jobScheduler.scheduleJob(triggerKey, 10, platformCallback)
+        simpleJobScheduler.scheduleJob(triggerKey, 10, platformCallback)
 
         cache.put(marketPair, triggerKey)
     }
@@ -48,7 +48,7 @@ class BinanceDayChangeIndicator(
     override fun closeStream(pair: GenericMarketPair) {
         val marketPair = MarketPair.valueOf(pair.getName())
         val triggerKey = cache.get(marketPair)?.get() as TriggerKey
-        jobScheduler.unscheduleJob(triggerKey)
+        simpleJobScheduler.unscheduleJob(triggerKey)
     }
 
     override fun getServerTime(): Long {
